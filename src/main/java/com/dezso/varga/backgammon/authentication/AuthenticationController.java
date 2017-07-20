@@ -2,15 +2,15 @@ package com.dezso.varga.backgammon.authentication;
 
 import com.dezso.varga.backgammon.authentication.domain.Account;
 import com.dezso.varga.backgammon.authentication.repository.AccountRepository;
-import com.dezso.varga.backgammon.exeptions.MissingFieldsException;
-import io.jsonwebtoken.Claims;
+import com.dezso.varga.backgammon.exeptions.BgException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.dezso.varga.backgammon.authentication.domain.RegisterRequest;
-
+import java.util.Date;
 @RestController
 @RequestMapping("account")
-public class SignupController {
+public class AuthenticationController {
 	
 	@Autowired
 	private AuthenticationService authenticationService;
@@ -28,12 +28,10 @@ public class SignupController {
 				|| registerRequest.getAccount().getEmail().trim().isEmpty()
 				|| registerRequest.getAccount().getPassword() == null
 				|| registerRequest.getAccount().getPassword().trim().isEmpty()) {
-			throw new MissingFieldsException("Missing or invalid mandatory fields at registration");
+			throw new BgException("Missing or invalid mandatory fields at registration",
+					HttpStatus.PRECONDITION_FAILED.value());
 		}
 		String confirmationToken = AuthUtils.generateRegisterConfirmationToken(registerRequest);
-
-//		Claims claims = Jwts.parser().setSigningKey("secretkey").parseClaimsJws(confirmationToken).getBody();
-
 		authenticationService.sendConfirmationMail();
 		return confirmationToken;
 	}
@@ -43,5 +41,19 @@ public class SignupController {
 		Account account = AuthUtils.validateConfirmToken(confirmToken);
 		accountRepository.save(account);
 		return "ok";
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/login")
+	public String login(@RequestHeader (value="Authorization", required=false) String authHeader) throws Exception {
+		Account credentials = AuthUtils.extractAccountFromBasicToken(authHeader);
+		Account account = accountRepository.findByEmail(credentials.getEmail());
+		if (account == null) {
+			throw new BgException("User email not found.", HttpStatus.UNAUTHORIZED.value());
+		}
+		if (!credentials.getPassword().equals(account.getPassword())) {
+			throw new BgException("Invalid credentials. Please check your email and password.",
+					HttpStatus.UNAUTHORIZED.value());
+		}
+		return AuthUtils.generateBearerToken(account);
 	}
 }

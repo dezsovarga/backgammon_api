@@ -6,17 +6,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Map;
+
 /**
  * Created by dezso on 25.06.2017.
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MissingFieldsException.class)
-    @ResponseStatus(value=HttpStatus.PRECONDITION_FAILED, reason = "Missing or invalid mandatory fields")
+    @ExceptionHandler
+    @ResponseStatus(value=HttpStatus.PRECONDITION_FAILED)
     @ResponseBody
-    public void handleMissingFieldsException(final MissingFieldsException ex) {
-        ex.printStackTrace();
+    public Map<String, String> handleMissingFieldsException(BgException ex) {
+        return ex.getErrorBody();
     }
 
 }
