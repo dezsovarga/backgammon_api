@@ -2,12 +2,13 @@ package com.dezso.varga.backgammon.authentication;
 
 import com.dezso.varga.backgammon.authentication.domain.Account;
 import com.dezso.varga.backgammon.authentication.repository.AccountRepository;
+import com.dezso.varga.backgammon.exeptions.AuthExeption;
 import com.dezso.varga.backgammon.exeptions.BgException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.dezso.varga.backgammon.authentication.domain.RegisterRequest;
-import java.util.Date;
+
 @RestController
 @RequestMapping("account")
 public class AuthenticationController {
@@ -48,10 +49,10 @@ public class AuthenticationController {
 		Account credentials = AuthUtils.extractAccountFromBasicToken(authHeader);
 		Account account = accountRepository.findByEmail(credentials.getEmail());
 		if (account == null) {
-			throw new BgException("User email not found.", HttpStatus.UNAUTHORIZED.value());
+			throw new AuthExeption("User email not found.", HttpStatus.UNAUTHORIZED.value());
 		}
 		if (!credentials.getPassword().equals(account.getPassword())) {
-			throw new BgException("Invalid credentials. Please check your email and password.",
+			throw new AuthExeption("Invalid credentials. Please check your email and password.",
 					HttpStatus.UNAUTHORIZED.value());
 		}
 		return AuthUtils.generateBearerToken(account);

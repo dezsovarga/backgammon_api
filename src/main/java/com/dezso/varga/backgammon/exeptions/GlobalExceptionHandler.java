@@ -14,10 +14,17 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler
+    @ExceptionHandler()
     @ResponseStatus(value=HttpStatus.PRECONDITION_FAILED)
     @ResponseBody
     public Map<String, String> handleMissingFieldsException(BgException ex) {
+        return ex.getErrorBody();
+    }
+
+    @ExceptionHandler(AuthExeption.class)
+    @ResponseStatus(value=HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public Map<String, String> handleAuthException(AuthExeption ex) {
         return ex.getErrorBody();
     }
 
