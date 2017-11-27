@@ -41,7 +41,7 @@ public class AuthenticationController {
 	public String confirm(@RequestHeader (value="Authorization") String confirmToken) throws Exception {
 		Account account = AuthUtils.validateConfirmToken(confirmToken);
 		accountRepository.save(account);
-		return "ok";
+		return AuthUtils.generateBearerToken(account);
 	}
 
 	@RequestMapping(method=RequestMethod.POST, value="/login")
