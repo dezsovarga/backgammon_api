@@ -28,5 +28,12 @@ public class GlobalExceptionHandler {
         return ex.getErrorBody();
     }
 
+   @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(value=HttpStatus.CONFLICT)
+    @ResponseBody
+    public Map<String, String> handleUserAlreadyExistsException(BgException ex) {
+        return ex.getErrorBody();
+    }
+
 }
 

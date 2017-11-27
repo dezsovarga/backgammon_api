@@ -4,6 +4,7 @@ import com.dezso.varga.backgammon.authentication.domain.Account;
 import com.dezso.varga.backgammon.authentication.repository.AccountRepository;
 import com.dezso.varga.backgammon.exeptions.AuthExeption;
 import com.dezso.varga.backgammon.exeptions.BgException;
+import com.dezso.varga.backgammon.exeptions.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,13 @@ public class AuthenticationController {
 	@RequestMapping(method=RequestMethod.GET, value="register/confirm")
 	public String confirm(@RequestHeader (value="Authorization") String confirmToken) throws Exception {
 		Account account = AuthUtils.validateConfirmToken(confirmToken);
-		accountRepository.save(account);
+		Account foundAccount = accountRepository.findByEmail(account.getEmail());
+		if (foundAccount == null) {
+			accountRepository.save(account);
+		} else {
+			throw new UserAlreadyExistsException("User already verified", HttpStatus.CONFLICT.value());
+		}
+
 		return AuthUtils.generateBearerToken(account);
 	}
 
