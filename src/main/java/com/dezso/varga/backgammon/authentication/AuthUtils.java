@@ -4,8 +4,10 @@ import com.dezso.varga.backgammon.authentication.domain.Account;
 import com.dezso.varga.backgammon.authentication.domain.RegisterRequest;
 import com.dezso.varga.backgammon.authentication.domain.Role;
 import com.dezso.varga.backgammon.exeptions.BgException;
+import com.dezso.varga.backgammon.exeptions.ConfirmTokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -59,7 +61,13 @@ public class AuthUtils {
     }
 
     public static Account validateConfirmToken(String confirmToken) throws Exception {
-        Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(confirmToken).getBody();
+        Claims claims;
+        try {
+            claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(confirmToken).getBody();
+        } catch (ExpiredJwtException ex) {
+            throw new ConfirmTokenExpiredException("Confirmation token expired", HttpStatus.PRECONDITION_FAILED.value());
+        }
+
         RegisterRequest initialRequest = objectMapper.readValue(claims.get("perm").toString(), RegisterRequest.class);
         Set roles = new HashSet();
         roles.add(new Role(claims.get("roles").toString()));
