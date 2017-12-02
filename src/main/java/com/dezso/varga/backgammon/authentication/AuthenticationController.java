@@ -33,6 +33,10 @@ public class AuthenticationController {
 			throw new BgException("Missing or invalid mandatory fields at registration",
 					HttpStatus.PRECONDITION_FAILED.value());
 		}
+		Account existingAccount = accountRepository.findByEmail(registerRequest.getAccount().getEmail().trim());
+		if (existingAccount != null) {
+			throw new UserAlreadyExistsException("Account already exists", HttpStatus.CONFLICT.value());
+		}
 		String confirmationToken = AuthUtils.generateRegisterConfirmationToken(registerRequest);
 		authenticationService.sendConfirmationMail();
 		return confirmationToken;
@@ -41,8 +45,8 @@ public class AuthenticationController {
 	@RequestMapping(method=RequestMethod.GET, value="register/confirm")
 	public String confirm(@RequestHeader (value="Authorization") String confirmToken) throws Exception {
 		Account account = AuthUtils.validateConfirmToken(confirmToken);
-		Account foundAccount = accountRepository.findByEmail(account.getEmail());
-		if (foundAccount == null) {
+		Account existingAccount = accountRepository.findByEmail(account.getEmail());
+		if (existingAccount == null) {
 			accountRepository.save(account);
 		} else {
 			throw new UserAlreadyExistsException("User already verified", HttpStatus.CONFLICT.value());
