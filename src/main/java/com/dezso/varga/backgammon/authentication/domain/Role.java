@@ -10,7 +10,6 @@ import java.util.Set;
 public class Role {
     private Long id;
     private String name;
-    private Set<Account> accounts;
 
     public Role() {
         super();
@@ -36,14 +35,5 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @ManyToMany(mappedBy = "roles")
-    public Set<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(Set<Account> accounts) {
-        this.accounts = accounts;
     }
 }

@@ -64,8 +64,8 @@ public class AuthUtils {
         Claims claims;
         try {
             claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(confirmToken).getBody();
-        } catch (ExpiredJwtException ex) {
-            throw new ConfirmTokenExpiredException("Confirmation token expired", HttpStatus.PRECONDITION_FAILED.value());
+        } catch (Exception ex) {
+            throw new ConfirmTokenExpiredException("Confirmation token expired or invalid", HttpStatus.PRECONDITION_FAILED.value());
         }
 
         RegisterRequest initialRequest = objectMapper.readValue(claims.get("perm").toString(), RegisterRequest.class);

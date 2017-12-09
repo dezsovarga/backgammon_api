@@ -18,6 +18,15 @@ public class Account {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Account(Long id, String firstName, String lastName, String email, String password, Set<Role> roles) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+	}
+
 	public Account(RegisterRequest registerRequest) {
 		this.firstName = registerRequest.getAccount().getFirstName();
 		this.lastName = registerRequest.getAccount().getLastName();
