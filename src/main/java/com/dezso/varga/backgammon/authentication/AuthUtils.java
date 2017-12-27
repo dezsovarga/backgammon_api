@@ -91,7 +91,7 @@ public class AuthUtils {
             String[] userInfo = decoded.split(BASIC_AUTH_ENCODER_SEPARATOR);
             if (userInfo.length == 2) {
                 Account account = new Account();
-                account.setEmail(userInfo[0].toLowerCase());
+                account.setEmail(userInfo[0]);
                 account.setPassword(userInfo[1]);
                 return account;
             } else {
