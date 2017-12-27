@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * Created by dezso on 18.11.2017.
  */
-@ResponseStatus(value= HttpStatus.UNAUTHORIZED,reason="User email not found")
 public class AuthExeption extends BgException{
 
     int statusCode;

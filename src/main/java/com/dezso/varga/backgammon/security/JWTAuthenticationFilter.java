@@ -25,8 +25,6 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
                                  FilterChain filterChain)
             throws IOException, ServletException {
         Authentication authentication = TokenAuthenticationService.getAuthentication(req);
-        TokenAuthenticationService.getAuthentication(req);
-
         SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
 
