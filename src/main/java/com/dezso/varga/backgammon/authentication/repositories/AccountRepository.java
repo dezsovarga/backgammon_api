@@ -1,4 +1,4 @@
-package com.dezso.varga.backgammon.authentication.repository;
+package com.dezso.varga.backgammon.authentication.repositories;
 
 import com.dezso.varga.backgammon.authentication.domain.Account;
 import org.springframework.data.repository.CrudRepository;
