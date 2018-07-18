@@ -12,6 +12,7 @@ CREATE TABLE `account` (
   `lastName` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
@@ -39,3 +40,16 @@ CREATE TABLE `role` (
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+INSERT INTO account (
+ email, first_name, last_name, password, rating )
+VALUES
+ ( "ronaldo@cristiano.com", "ronaldo", "cristiano", "password", 1500),
+ ( "messi@lionel.com", "lionel", "messi", "password", 1500),
+ ( "mohamed@salah.com", "mohamed", "salah", "password", 1500),
+ ( "gereth@bale.com", "gereth", "bale", "password", 1500),
+ ( "alexis@sanchez.com", "alexis", "sanchez", "password", 1500);
+
+insert into account_role (account_id,role_id) values (5,5),(6,6),(7,7),(8,8),(9,9);
+
+insert into role (name) values ("user"),("user"),("user"),("user"),("user");

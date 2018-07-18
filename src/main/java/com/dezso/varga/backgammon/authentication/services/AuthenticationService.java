@@ -40,6 +40,7 @@ public class AuthenticationService {
         Account account = AuthUtils.validateConfirmToken(confirmToken);
         Account existingAccount = accountRepository.findByEmail(account.getEmail());
         if (existingAccount == null) {
+            account.setActive(true);
             accountRepository.save(account);
         } else {
             throw new UserAlreadyExistsException("User already verified", HttpStatus.CONFLICT.value());

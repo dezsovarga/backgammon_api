@@ -12,6 +12,10 @@ public class Account {
 	private String email;
 	private String password;
 	private Set<Role> roles;
+	private int rating;
+
+	@Column(name = "IS_ACTIVE", nullable = false, columnDefinition = "BOOLEAN default true")
+	private boolean active;
 
 	public Account() {
 		super();
@@ -86,5 +90,21 @@ public class Account {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 }
